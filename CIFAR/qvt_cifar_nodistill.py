@@ -584,7 +584,7 @@ def train_qvit(n_train, n_test, n_epochs, batch_size=64):
 # n_test = 4000
 n_epochs = 100
 n_reps = 1 # Consider reducing for faster testing of 10-class setup
-train_sizes = [1000] # Consider smaller sizes first for 10-class
+train_sizes = [10000] # Consider smaller sizes first for 10-class
 BATCH_SIZE = 64 # Define a global batch size or pass it around
 
 def run_iterations(n_train, current_batch_size):

@@ -2,4 +2,6 @@ data/
 CIFAR/data/
 MNIST/data/
 QVAA/data/
+CIFAR/cifar10_models/
+CIFAR/conceptual_qvt/
 

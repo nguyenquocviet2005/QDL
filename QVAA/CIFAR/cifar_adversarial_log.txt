@@ -1,0 +1,44 @@
+Loading 200 CIFAR-10 test samples for adversarial evaluation...
+CIFAR-10 Test data loaded: images shape (200, 32, 32, 3), labels shape (200, 10)
+Loading CIFAR-10 data for minimal training (10000 samples)...
+Initializing QViT model and parameters for CIFAR-10...
+Starting minimal CIFAR-10 training for 10 epochs...
+Epoch 1/10, Avg Loss: 2.0649
+Epoch 2/10, Avg Loss: 1.5279
+Epoch 3/10, Avg Loss: 1.3276
+Epoch 4/10, Avg Loss: 1.1519
+Epoch 5/10, Avg Loss: 1.0039
+Epoch 6/10, Avg Loss: 0.8882
+Epoch 7/10, Avg Loss: 0.7469
+Epoch 8/10, Avg Loss: 0.6297
+Epoch 9/10, Avg Loss: 0.5031
+Epoch 10/10, Avg Loss: 0.4081
+Minimal CIFAR-10 training finished.
+Evaluating clean accuracy on QViT (CIFAR-10)...
+Clean accuracy on QViT (CIFAR-10): 0.5400
+--- Applying FGSM attack on QViT (CIFAR-10) ---
+Evaluating QViT on FGSM adversarial examples (CIFAR-10)...
+Adversarial accuracy (FGSM, CIFAR-10): 0.0000
+Attack Success Rate (FGSM, CIFAR-10): 1.0000
+Robustness Gap (FGSM, CIFAR-10): 0.5400
+--- Applying PGD attack on QViT (CIFAR-10) ---
+Evaluating QViT on PGD adversarial examples (CIFAR-10)...
+Adversarial accuracy (PGD, CIFAR-10): 0.0000
+Attack Success Rate (PGD, CIFAR-10): 1.0000
+Robustness Gap (PGD, CIFAR-10): 0.5400
+--- Applying MIM attack on QViT (CIFAR-10) ---
+Evaluating QViT on MIM adversarial examples (CIFAR-10)...
+Adversarial accuracy (MIM, CIFAR-10): 0.0000
+Attack Success Rate (MIM, CIFAR-10): 1.0000
+Robustness Gap (MIM, CIFAR-10): 0.5400
+--- Applying APGD attack on QViT (CIFAR-10) ---
+Evaluating QViT on APGD adversarial examples (CIFAR-10)...
+Adversarial accuracy (APGD, CIFAR-10): 0.0000
+Attack Success Rate (APGD, CIFAR-10): 1.0000
+Robustness Gap (APGD, CIFAR-10): 0.5400
+--- Applying SA attack on QViT (CIFAR-10) ---
+Evaluating QViT on SA adversarial examples (CIFAR-10)...
+Adversarial accuracy (SA, CIFAR-10): 0.5350
+Attack Success Rate (SA, CIFAR-10): 0.4650
+Robustness Gap (SA, CIFAR-10): 0.0050
+Adversarial evaluation complete for CIFAR-10.

@@ -1,0 +1,54 @@
+Loading 200 MNIST test samples for adversarial evaluation...
+Test data loaded: images shape (200, 28, 28, 1), labels shape (200, 10)
+Loading data for minimal training (1024 samples)...
+Initializing QViT model and parameters...
+Starting minimal training for 20 epochs...
+Epoch 1/20, Avg Loss: 1.5304
+Epoch 2/20, Avg Loss: 0.6491
+Epoch 3/20, Avg Loss: 0.4363
+Epoch 4/20, Avg Loss: 0.3216
+Epoch 5/20, Avg Loss: 0.2636
+Epoch 6/20, Avg Loss: 0.2195
+Epoch 7/20, Avg Loss: 0.1853
+Epoch 8/20, Avg Loss: 0.1551
+Epoch 9/20, Avg Loss: 0.1168
+Epoch 10/20, Avg Loss: 0.0943
+Epoch 11/20, Avg Loss: 0.0759
+Epoch 12/20, Avg Loss: 0.0683
+Epoch 13/20, Avg Loss: 0.0595
+Epoch 14/20, Avg Loss: 0.0502
+Epoch 15/20, Avg Loss: 0.0464
+Epoch 16/20, Avg Loss: 0.0410
+Epoch 17/20, Avg Loss: 0.0459
+Epoch 18/20, Avg Loss: 0.0563
+Epoch 19/20, Avg Loss: 0.0575
+Epoch 20/20, Avg Loss: 0.0325
+Minimal training finished.
+Evaluating clean accuracy on QViT...
+Clean accuracy on QViT: 0.9050
+--- Applying FGSM attack on QViT ---
+Evaluating QViT on FGSM adversarial examples...
+Adversarial accuracy (FGSM): 0.2500
+Attack Success Rate (FGSM): 0.7500
+Robustness Gap (FGSM): 0.6550
+--- Applying PGD attack on QViT ---
+Evaluating QViT on PGD adversarial examples...
+Adversarial accuracy (PGD): 0.0150
+Attack Success Rate (PGD): 0.9850
+Robustness Gap (PGD): 0.8900
+--- Applying MIM attack on QViT ---
+Evaluating QViT on MIM adversarial examples...
+Adversarial accuracy (MIM): 0.0100
+Attack Success Rate (MIM): 0.9900
+Robustness Gap (MIM): 0.8950
+--- Applying APGD attack on QViT ---
+Evaluating QViT on APGD adversarial examples...
+Adversarial accuracy (APGD): 0.0150
+Attack Success Rate (APGD): 0.9850
+Robustness Gap (APGD): 0.8900
+--- Applying SA attack on QViT ---
+Evaluating QViT on SA adversarial examples...
+Adversarial accuracy (SA): 0.8600
+Attack Success Rate (SA): 0.1400
+Robustness Gap (SA): 0.0450
+Adversarial evaluation complete.

@@ -1,0 +1,9 @@
+
+=== Starting training for train size 2 ===
+
+Starting repetition 1/1 for train size 2
+Train Size: 2, Epoch: 1/5, Train Loss: 0.6416, Train Acc: 1.0000, Test Loss: 0.7218, Test Acc: 0.4300, Epoch time: 44.239891 seconds
+Train Size: 2, Epoch: 2/5, Train Loss: 0.6063, Train Acc: 1.0000, Test Loss: 0.7302, Test Acc: 0.4300, Epoch time: 28.766409 seconds
+Train Size: 2, Epoch: 3/5, Train Loss: 0.5717, Train Acc: 1.0000, Test Loss: 0.7401, Test Acc: 0.4300, Epoch time: 39.324674 seconds
+Train Size: 2, Epoch: 4/5, Train Loss: 0.5379, Train Acc: 1.0000, Test Loss: 0.7517, Test Acc: 0.4300, Epoch time: 39.700158 seconds
+Train Size: 2, Epoch: 5/5, Train Loss: 0.5051, Train Acc: 1.0000, Test Loss: 0.7650, Test Acc: 0.4300, Epoch time: 21.782560 seconds

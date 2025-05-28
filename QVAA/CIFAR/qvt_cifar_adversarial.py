@@ -574,7 +574,7 @@ if __name__ == "__main__":
     # n_train_subset=1024, n_epochs_subset=20 might be slow for CIFAR on CPU without JIT for full training loop.
     # Using smaller values for quick testing. Adjust as needed.
     qvit_params, qvit_model_instance = get_trained_qvit_params_and_model(
-        n_train_subset=128, n_epochs_subset=10, batch_size_train=64
+        n_train_subset=10000, n_epochs_subset=20, batch_size_train=64
     )
 
     # Define model function for attacks that use gradients (FGSM, PGD, MIM, APGD)

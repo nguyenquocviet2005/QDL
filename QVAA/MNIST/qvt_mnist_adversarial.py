@@ -550,7 +550,7 @@ if __name__ == "__main__":
 
     # Get (minimally) trained QViT model and parameters
     # For more robust results, train longer or load pre-trained model.
-    qvit_params, qvit_model_instance = get_trained_qvit_params_and_model(n_train_subset=1024, n_epochs_subset=20, batch_size_train=64)
+    qvit_params, qvit_model_instance = get_trained_qvit_params_and_model(n_train_subset=10000, n_epochs_subset=20, batch_size_train=64)
 
     # Define model function for attacks that use gradients (FGSM, PGD, MIM, APGD)
     # These expect model_fn(params, x_images_batch) -> logits

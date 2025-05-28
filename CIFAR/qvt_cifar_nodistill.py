@@ -63,18 +63,8 @@ class QSAL_pennylane:
         self.d = d_patch_config # Dimension of input/output vectors (now configurable)
         self.dev = qml.device("default.qubit", wires=self.num_q)
 
-        # Define observables for value circuit, now based on d_patch_config
-        self.observables = []
-        for i in range(self.d):
-            qubit = i % self.num_q
-            pauli_idx = (i // self.num_q) % 3
-            if pauli_idx == 0:
-                obs = qml.PauliZ(qubit)
-            elif pauli_idx == 1:
-                obs = qml.PauliX(qubit)
-            else:
-                obs = qml.PauliY(qubit)
-            self.observables.append(obs)
+        # Define observables for value circuit using the new diversified method
+        self.observables = QSAL_pennylane._generate_observables(self.num_q, self.d)
 
         # Define quantum nodes with JAX interface
         self.vqnod = qml.QNode(self.circuit_v, self.dev, interface="jax")
@@ -145,6 +135,87 @@ class QSAL_pennylane:
                 qml.RY(weights[idx], wires=j)
                 idx += 1
         return [qml.expval(qml.PauliZ(0))]
+
+    @staticmethod
+    def _generate_observables(num_qubits, num_observables_needed):
+        candidate_observables = []
+        paulis = [qml.PauliX, qml.PauliY, qml.PauliZ]
+
+        # 1. Single-qubit observables
+        if len(candidate_observables) < num_observables_needed:
+            for i in range(num_qubits):
+                for P_constructor in paulis:
+                    if len(candidate_observables) < num_observables_needed:
+                        candidate_observables.append(P_constructor(wires=i))
+                    else:
+                        break
+                if len(candidate_observables) >= num_observables_needed:
+                    break
+        
+        # 2. Two-qubit observables
+        if len(candidate_observables) < num_observables_needed:
+            for i in range(num_qubits):
+                for j in range(i + 1, num_qubits): # Ensure i < j for unique pairs of qubits
+                    for P1_constructor in paulis:
+                        for P2_constructor in paulis:
+                            if len(candidate_observables) < num_observables_needed:
+                                candidate_observables.append(P1_constructor(wires=i) @ P2_constructor(wires=j))
+                            else:
+                                break
+                        if len(candidate_observables) >= num_observables_needed:
+                            break
+                    if len(candidate_observables) >= num_observables_needed:
+                        break
+                if len(candidate_observables) >= num_observables_needed:
+                    break
+        
+        # 3. Three-qubit observables
+        if len(candidate_observables) < num_observables_needed:
+            for i in range(num_qubits):
+                for j in range(i + 1, num_qubits):
+                    for k in range(j + 1, num_qubits): # Ensure i < j < k
+                        for P1_constructor in paulis:
+                            for P2_constructor in paulis:
+                                for P3_constructor in paulis:
+                                    if len(candidate_observables) < num_observables_needed:
+                                        candidate_observables.append(
+                                            P1_constructor(wires=i) @ P2_constructor(wires=j) @ P3_constructor(wires=k)
+                                        )
+                                    else:
+                                        break
+                                if len(candidate_observables) >= num_observables_needed:
+                                    break
+                            if len(candidate_observables) >= num_observables_needed:
+                                break
+                        if len(candidate_observables) >= num_observables_needed:
+                            break
+                    if len(candidate_observables) >= num_observables_needed:
+                        break
+                if len(candidate_observables) >= num_observables_needed:
+                    break
+
+        if len(candidate_observables) >= num_observables_needed:
+            return candidate_observables[:num_observables_needed]
+        else:
+            # Fallback: Not enough unique observables generated with up to 3-qubit Paulis
+            print(f"Warning: Generated only {len(candidate_observables)} unique Pauli string observables (up to 3 qubits) "
+                  f"for {num_qubits} qubits, but needed {num_observables_needed}. "
+                  "Repeating from the generated set to fill the remainder.")
+            
+            final_observables = list(candidate_observables) # Start with what we have
+            if not final_observables: # e.g. num_qubits = 0
+                if num_observables_needed > 0:
+                    raise ValueError(f"Cannot generate {num_observables_needed} observables with {num_qubits} qubits.")
+                else:
+                    return [] # Return empty list if 0 observables needed and 0 generated
+
+            # Cycle through the generated unique observables to fill the remainder
+            # This ensures the list has 'num_observables_needed' items.
+            idx = 0
+            while len(final_observables) < num_observables_needed:
+                final_observables.append(candidate_observables[idx % len(candidate_observables)])
+                idx += 1
+            return final_observables
 
     def __call__(self, input_sequence, layer_params):
         # layer_params contains: Q, K, V circuit weights, ln1_gamma, ln1_beta, ffn_w1, ffn_b1, ffn_w2, ffn_b2, ln2_gamma, ln2_beta
@@ -485,7 +556,7 @@ def train_qvit(n_train, n_test, n_epochs, batch_size=64):
     # Chain Adam with gradient clipping
     optimizer = optax.chain(
         optax.clip_by_global_norm(1.0),  # Clip gradients to a max global norm of 1.0
-        optax.adam(learning_rate=lr_schedule) # You reverted to adam, keeping it here
+        optax.adamw(learning_rate=lr_schedule) # You reverted to adam, keeping it here
     )
 
     opt_state = optimizer.init(params)
@@ -518,6 +589,7 @@ def train_qvit(n_train, n_test, n_epochs, batch_size=64):
     start_time = time.time()
     
     for epoch in range(n_epochs):
+        start_time_epoch = time.time()
         epoch_train_loss = 0.0
         epoch_train_acc = 0.0
         num_train_batches = 0
@@ -562,7 +634,8 @@ def train_qvit(n_train, n_test, n_epochs, batch_size=64):
                   f"Train Loss: {avg_epoch_train_loss:.4f} | "
                   f"Train Acc: {avg_epoch_train_acc:.4f} | "
                   f"Test Loss: {test_loss:.4f} | "
-                  f"Test Acc: {test_acc:.4f}")
+                  f"Test Acc: {test_acc:.4f} | "
+                  f"Time: {time.time() - start_time_epoch:.2f} seconds")
 
     training_time = time.time() - start_time
     print(f"\nTraining completed in {training_time:.2f} seconds for n_train={n_train}")
